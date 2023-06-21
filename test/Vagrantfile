@@ -1,23 +1,25 @@
+$install_k = <<-'SCRIPT'
+curl -sfL https://get.k3s.io | sh -
+SCRIPT
+
+$copy_file = <<-'SCRIPT'
+cp /var/lib/rancher/k3s/server/token /vagrant/
+SCRIPT
+# -> convention de nommage heredocs ruby
+
 Vagrant.configure("2") do |config|
 
 	config.vm.define "thhusserS" do |centos1|
-	  centos1.vm.box = "centos/7"
+	  centos1.vm.box = "hashicorp/bionic64"
 	  centos1.vm.hostname = "thhusserS"
 	  centos1.vm.network "private_network", ip: "192.168.56.110"
+	  centos1.vm.provision "shell", inline: $install_k + $copy_file
       
-	  # centos1.vm.disk :disk, size: "10GB", primary: true
-	  # A tester avec la var d'env : VAGRANT_EXPERIMENTAL="disks"
-	  # Ne fonctionne pas !!
-
-
-
 	  # Définir le fournisseur comme VirtualBox
 	  centos1.vm.provider "virtualbox" do |v|
-		v.memory = 512  # Mémoire en Mo
+		v.memory = 1024  # Mémoire en Mo
 		v.cpus = 1  # Nombre de CPU
 		v.name = "Server"
-		# v.customize ['createhd', '--filename', './my_virtual_disk.vdi', '--size', 10000 ]
-		# v.customize ['storageattach', :id, '--storagectl', 'SCSI', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', './my_virtual_disk.vdi']
 	  end
 	
 	# Activer la connexion SSH sans mot de passe
@@ -25,18 +27,21 @@ Vagrant.configure("2") do |config|
 	end
   
 	config.vm.define "thhusserSW" do |centos2|
-	  centos2.vm.box = "centos/7"
+	  centos2.vm.box = "hashicorp/bionic64"
 	  centos2.vm.hostname = "thhusserSW"
 	  centos2.vm.network "private_network", ip: "192.168.56.111"
+	  centos2.vm.provision "shell", inline: $install_k
   
 	  centos2.vm.provider "virtualbox" do |v|
-		v.memory = 512
+		v.memory = 1024
 		v.cpus = 1
 		v.name = "ServerWorker"
 	  end
-	
 	  centos2.ssh.insert_key = false
 	end
   
-  end
-  
+end
+
+
+# Install k3s -> curl -sfL https://get.k3s.io | sh -
+# /usr/local/bin/kubectl -> symlink : k3s
