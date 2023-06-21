@@ -7,6 +7,10 @@ cp /var/lib/rancher/k3s/server/token /vagrant/
 SCRIPT
 # -> convention de nommage heredocs ruby
 
+$run_k3s = <<-'SCRIPT'
+curl -sfL https://get.k3s.io | K3S_URL=https://192.168.56.110:6443 K3S_TOKEN="/vagrant/token" sh -
+SCRIPT
+
 Vagrant.configure("2") do |config|
 
 	config.vm.define "thhusserS" do |centos1|
@@ -30,7 +34,7 @@ Vagrant.configure("2") do |config|
 	  centos2.vm.box = "hashicorp/bionic64"
 	  centos2.vm.hostname = "thhusserSW"
 	  centos2.vm.network "private_network", ip: "192.168.56.111"
-	  centos2.vm.provision "shell", inline: $install_k
+	  centos2.vm.provision "shell", inline: $run_k3s
   
 	  centos2.vm.provider "virtualbox" do |v|
 		v.memory = 1024
