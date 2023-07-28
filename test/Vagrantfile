@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-$script = <<-'SCRIPT'
-curl -sfL https://get.k3s.io | sh -
-SCRIPT
-
-=======
 $install_k = <<-'SCRIPT'
 curl -sfL https://get.k3s.io | sh -
 SCRIPT
@@ -17,26 +11,14 @@ $run_k3s = <<-'SCRIPT'
 curl -sfL https://get.k3s.io | K3S_URL=https://192.168.56.110:6443 K3S_TOKEN="/vagrant/token" sh -
 SCRIPT
 
->>>>>>> 8ac126b39a4649a09b63a077fb5a899938790ca2
 Vagrant.configure("2") do |config|
 
 	config.vm.define "thhusserS" do |centos1|
 	  centos1.vm.box = "hashicorp/bionic64"
 	  centos1.vm.hostname = "thhusserS"
 	  centos1.vm.network "private_network", ip: "192.168.56.110"
-<<<<<<< HEAD
-	  centos1.vm.provision "shell", inline: $script
-      
-	  # centos1.vm.disk :disk, size: "10GB", primary: true
-	  # A tester avec la var d'env : VAGRANT_EXPERIMENTAL="disks"
-	  # Ne fonctionne pas !!
-
-
-
-=======
 	  centos1.vm.provision "shell", inline: $install_k + $copy_file
       
->>>>>>> 8ac126b39a4649a09b63a077fb5a899938790ca2
 	  # Définir le fournisseur comme VirtualBox
 	  centos1.vm.provider "virtualbox" do |v|
 		v.memory = 1024  # Mémoire en Mo
@@ -55,11 +37,7 @@ Vagrant.configure("2") do |config|
 	  centos2.vm.box = "hashicorp/bionic64"
 	  centos2.vm.hostname = "thhusserSW"
 	  centos2.vm.network "private_network", ip: "192.168.56.111"
-<<<<<<< HEAD
-	  centos2.vm.provision "shell", inline: $script
-=======
 	  centos2.vm.provision "shell", inline: $run_k3s
->>>>>>> 8ac126b39a4649a09b63a077fb5a899938790ca2
   
 	  centos2.vm.provider "virtualbox" do |v|
 		v.memory = 1024
@@ -70,13 +48,8 @@ Vagrant.configure("2") do |config|
 	  centos2.ssh.insert_key = false
 	end
   
-<<<<<<< HEAD
-  end
-  
-=======
 end
 
->>>>>>> 8ac126b39a4649a09b63a077fb5a899938790ca2
 
 # Install k3s -> curl -sfL https://get.k3s.io | sh -
 # /usr/local/bin/kubectl -> symlink : k3s
